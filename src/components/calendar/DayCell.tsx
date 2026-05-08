@@ -11,8 +11,6 @@ interface DayCellProps {
   onClick: (date: string) => void;
 }
 
-const GAP = 2;
-
 export default function DayCell({ day, isSelected, avatarSize, onClick }: DayCellProps) {
   const avatarAreaRef = useRef<HTMLDivElement>(null);
   const [areaWidth, setAreaWidth] = useState(0);
@@ -21,15 +19,12 @@ export default function DayCell({ day, isSelected, avatarSize, onClick }: DayCel
     const el = avatarAreaRef.current;
     if (!el) return;
     const observer = new ResizeObserver((entries) => {
-      setAreaWidth(entries[0].contentRect.width);
+      const w = entries[0].contentRect.width;
+      setAreaWidth((prev) => (prev === w ? prev : w));
     });
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-
-  const maxFit = areaWidth > 0
-    ? Math.max(1, Math.floor((areaWidth + GAP) / (avatarSize + GAP)))
-    : 3;
 
   const handleClick = () => {
     if (day.isCurrentMonth) {
@@ -67,7 +62,11 @@ export default function DayCell({ day, isSelected, avatarSize, onClick }: DayCel
 
       {/* Avatars */}
       <div ref={avatarAreaRef} className="flex-1 overflow-hidden">
-        <AvatarCluster activities={day.creatorActivities} size={avatarSize} maxFit={maxFit} />
+        <AvatarCluster
+          activities={day.creatorActivities}
+          size={avatarSize}
+          containerWidth={areaWidth}
+        />
       </div>
 
       {/* Update count text */}

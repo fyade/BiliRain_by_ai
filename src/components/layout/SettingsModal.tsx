@@ -15,25 +15,23 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
   const [interval, setInterval] = useState(30);
   const [avatarSize, setAvatarSize] = useState(24);
   const [saved, setSaved] = useState(false);
-  const selfUpdating = useRef(false);
+  const initialized = useRef(false);
 
-  // Only initialize from config when modal first opens (not on every config change)
-  const prevOpen = useRef(false);
   useEffect(() => {
-    if (open && !prevOpen.current && config) {
+    if (open && config && !initialized.current) {
       setCookie(config.cookie || '');
       setInterval(config.refreshIntervalMin || 30);
       setAvatarSize(config.avatarSize || 24);
+      initialized.current = true;
     }
-    prevOpen.current = open;
+    if (!open) {
+      initialized.current = false;
+    }
   }, [open, config]);
 
   const handleAvatarSizeChange = (size: number) => {
     setAvatarSize(size);
-    selfUpdating.current = true;
-    updateConfig({ avatarSize: size }).finally(() => {
-      selfUpdating.current = false;
-    });
+    updateConfig({ avatarSize: size });
   };
 
   const handleSave = async () => {

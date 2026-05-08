@@ -5,11 +5,17 @@ import Tooltip from '@/components/ui/Tooltip';
 interface AvatarClusterProps {
   activities: CreatorActivity[];
   size: number;
-  maxFit: number;
+  containerWidth: number;
 }
 
-export default function AvatarCluster({ activities, size, maxFit }: AvatarClusterProps) {
+const GAP = 2;
+
+export default function AvatarCluster({ activities, size, containerWidth }: AvatarClusterProps) {
   if (activities.length === 0) return null;
+
+  const maxFit = containerWidth > 0
+    ? Math.max(1, Math.floor((containerWidth + GAP) / (size + GAP)))
+    : 3;
 
   const hasOverflow = activities.length > maxFit;
   const visibleCount = hasOverflow ? Math.max(0, maxFit - 1) : activities.length;
