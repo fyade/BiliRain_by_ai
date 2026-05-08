@@ -17,10 +17,7 @@ export function useCalendarData() {
 
   const doFetch = useCallback(
     async (uids: number[], force: boolean) => {
-      if (uids.length === 0) {
-        dispatch({ type: 'SET_MONTH_DATA', key: monthKey, data: {} });
-        return;
-      }
+      if (uids.length === 0) return;
 
       fetchingRef.current = true;
       dispatch({ type: 'SET_LOADING', loading: true });
@@ -46,10 +43,11 @@ export function useCalendarData() {
     [calState.currentYear, calState.currentMonth, monthKey, dispatch]
   );
 
-  // Fetch when month changes (only if not cached and no fetch in progress)
+  // Fetch when month changes (only if not cached, no fetch in progress, and creators exist)
   useEffect(() => {
+    const allUids = creatorState.creators.map((c) => c.uid);
+    if (allUids.length === 0) return;
     if (!calState.monthUpdatesCache[monthKey] && !fetchingRef.current) {
-      const allUids = creatorState.creators.map((c) => c.uid);
       doFetch(allUids, false);
     }
   }, [monthKey, calState.monthUpdatesCache, creatorState.creators, doFetch]);
