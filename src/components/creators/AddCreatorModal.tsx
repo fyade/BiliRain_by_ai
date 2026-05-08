@@ -23,6 +23,7 @@ export default function AddCreatorModal({ open, onClose }: AddCreatorModalProps)
     .map((s) => s.trim())
     .filter(Boolean);
   const isBatch = lines.length > 1;
+  const failedCount = batchResult?.summary.failed ?? 0;
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
@@ -46,6 +47,36 @@ export default function AddCreatorModal({ open, onClose }: AddCreatorModalProps)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : '添加失败');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRetry = async () => {
+    if (!batchResult) return;
+    const failedIdentifiers = batchResult.results
+      .filter((r) => r.status === 'failed')
+      .map((r) => r.identifier);
+    if (failedIdentifiers.length === 0) return;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const retryResult = await addCreatorBatch(failedIdentifiers, selectedGroups);
+      const prevOk = batchResult.results.filter((r) => r.status !== 'failed');
+      const merged = [...prevOk, ...retryResult.results];
+      setBatchResult({
+        results: merged,
+        summary: {
+          total: batchResult.summary.total,
+          added: merged.filter((r) => r.status === 'added').length,
+          skipped: merged.filter((r) => r.status === 'skipped').length,
+          failed: merged.filter((r) => r.status === 'failed').length,
+        },
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '重试失败');
     } finally {
       setLoading(false);
     }
@@ -158,6 +189,15 @@ export default function AddCreatorModal({ open, onClose }: AddCreatorModalProps)
               className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {loading ? '获取中...' : isBatch ? `批量添加 (${lines.length})` : '添加'}
+            </button>
+          )}
+          {batchResult && failedCount > 0 && (
+            <button
+              onClick={handleRetry}
+              disabled={loading}
+              className="px-4 py-2 text-sm bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            >
+              {loading ? '重试中...' : `重试失败项 (${failedCount})`}
             </button>
           )}
         </div>
