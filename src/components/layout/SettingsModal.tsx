@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Modal from '@/components/ui/Modal';
 import { useConfig } from '@/hooks/useConfig';
 
@@ -15,18 +15,25 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
   const [interval, setInterval] = useState(30);
   const [avatarSize, setAvatarSize] = useState(24);
   const [saved, setSaved] = useState(false);
+  const selfUpdating = useRef(false);
 
+  // Only initialize from config when modal first opens (not on every config change)
+  const prevOpen = useRef(false);
   useEffect(() => {
-    if (config && open) {
+    if (open && !prevOpen.current && config) {
       setCookie(config.cookie || '');
       setInterval(config.refreshIntervalMin || 30);
       setAvatarSize(config.avatarSize || 24);
     }
-  }, [config, open]);
+    prevOpen.current = open;
+  }, [open, config]);
 
   const handleAvatarSizeChange = (size: number) => {
     setAvatarSize(size);
-    updateConfig({ avatarSize: size });
+    selfUpdating.current = true;
+    updateConfig({ avatarSize: size }).finally(() => {
+      selfUpdating.current = false;
+    });
   };
 
   const handleSave = async () => {

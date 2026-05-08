@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useState, useEffect } from 'react';
 import { CalendarDay } from '@/types';
 import AvatarCluster from './AvatarCluster';
 
@@ -10,7 +11,26 @@ interface DayCellProps {
   onClick: (date: string) => void;
 }
 
+const GAP = 2;
+
 export default function DayCell({ day, isSelected, avatarSize, onClick }: DayCellProps) {
+  const avatarAreaRef = useRef<HTMLDivElement>(null);
+  const [areaWidth, setAreaWidth] = useState(0);
+
+  useEffect(() => {
+    const el = avatarAreaRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      setAreaWidth(entries[0].contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const maxFit = areaWidth > 0
+    ? Math.max(1, Math.floor((areaWidth + GAP) / (avatarSize + GAP)))
+    : 3;
+
   const handleClick = () => {
     if (day.isCurrentMonth) {
       onClick(day.fullDate);
@@ -46,8 +66,8 @@ export default function DayCell({ day, isSelected, avatarSize, onClick }: DayCel
       </div>
 
       {/* Avatars */}
-      <div className="flex-1 overflow-hidden">
-        <AvatarCluster activities={day.creatorActivities} size={avatarSize} />
+      <div ref={avatarAreaRef} className="flex-1 overflow-hidden">
+        <AvatarCluster activities={day.creatorActivities} size={avatarSize} maxFit={maxFit} />
       </div>
 
       {/* Update count text */}
