@@ -24,8 +24,13 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
     }
   }, [config, open]);
 
+  const handleAvatarSizeChange = (size: number) => {
+    setAvatarSize(size);
+    updateConfig({ avatarSize: size });
+  };
+
   const handleSave = async () => {
-    await updateConfig({ cookie, refreshIntervalMin: interval, avatarSize });
+    await updateConfig({ cookie, refreshIntervalMin: interval });
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -78,7 +83,7 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
             <input
               type="range"
               value={avatarSize}
-              onChange={(e) => setAvatarSize(Number(e.target.value))}
+              onChange={(e) => handleAvatarSizeChange(Number(e.target.value))}
               min={20}
               max={40}
               step={2}

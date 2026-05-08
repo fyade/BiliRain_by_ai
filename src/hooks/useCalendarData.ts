@@ -39,22 +39,20 @@ export function useCalendarData() {
         dispatch({ type: 'SET_MONTH_DATA', key: monthKey, data: res.data });
       } catch {
         dispatch({ type: 'SET_MONTH_DATA', key: monthKey, data: {} });
+      } finally {
+        fetchingRef.current = false;
       }
     },
     [calState.currentYear, calState.currentMonth, monthKey, dispatch]
   );
 
-  // Fetch when month changes
+  // Fetch when month changes (only if not cached and no fetch in progress)
   useEffect(() => {
     if (!calState.monthUpdatesCache[monthKey] && !fetchingRef.current) {
       const allUids = creatorState.creators.map((c) => c.uid);
       doFetch(allUids, false);
     }
   }, [monthKey, calState.monthUpdatesCache, creatorState.creators, doFetch]);
-
-  useEffect(() => {
-    fetchingRef.current = false;
-  }, [monthKey]);
 
   // ---- Unified refresh handler ----
 
@@ -66,7 +64,6 @@ export function useCalendarData() {
         dispatch({ type: 'SET_REFRESHING', refreshing: false });
         return;
       }
-      fetchingRef.current = false;
       dispatch({ type: 'SET_REFRESHING', refreshing: true });
       if (clearCache) {
         dispatch({ type: 'SET_MONTH_DATA', key: monthKey, data: {} });
