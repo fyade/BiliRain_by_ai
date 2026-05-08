@@ -77,21 +77,27 @@ export default function RefreshMenu({
           {rows.map((row) => (
             <div
               key={row.label}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 hover:bg-gray-50 transition-colors"
             >
-              <span className="text-sm text-gray-700 w-[72px] shrink-0">{row.label}</span>
+              <span className="text-sm text-gray-700 w-[68px] shrink-0">{row.label}</span>
               <button
+                title="全部博主"
                 onClick={() => handleClick(allUids, row.force, row.clearCache, row.navigateToday)}
-                className="px-2.5 py-1 text-xs rounded-md bg-gray-100 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                className="p-1.5 rounded-md text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors"
               >
-                全部博主
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                </svg>
               </button>
               <button
+                title="选定博主"
                 disabled={!hasSelected}
                 onClick={() => handleClick(selectedUids, row.force, row.clearCache, row.navigateToday)}
-                className="px-2.5 py-1 text-xs rounded-md bg-gray-100 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-1.5 rounded-md text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-25 disabled:cursor-not-allowed"
               >
-                选定博主
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </button>
             </div>
           ))}
