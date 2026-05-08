@@ -70,9 +70,9 @@ export default function UpdateFeed() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto">
-      {/* Date header */}
-      <div className="px-4 py-3 border-b border-gray-100">
+    <div className="flex-1 flex flex-col min-h-0">
+      {/* Fixed header: date + filter + count */}
+      <div className="flex-shrink-0 px-4 py-3 border-b border-gray-100">
         <h3 className="text-sm font-medium text-gray-800">
           {formatDateLabel(selectedDate)}
         </h3>
@@ -82,21 +82,21 @@ export default function UpdateFeed() {
         <p className="text-xs text-gray-400 mt-2">共 {updates.length} 条动态</p>
       </div>
 
-      {/* Update list */}
-      {updates.length === 0 ? (
-        <div className="p-8 text-center">
-          <p className="text-sm text-gray-400">该日期没有符合条件的更新</p>
-          {typeFilters.length > 0 && (
-            <p className="text-xs text-gray-300 mt-1">请调整上方筛选条件</p>
-          )}
-        </div>
-      ) : (
-        <div>
-          {updates.map((u) => (
+      {/* Scrollable list */}
+      <div className="flex-1 overflow-y-auto">
+        {updates.length === 0 ? (
+          <div className="p-8 text-center">
+            <p className="text-sm text-gray-400">该日期没有符合条件的更新</p>
+            {typeFilters.length > 0 && (
+              <p className="text-xs text-gray-300 mt-1">请调整上方筛选条件</p>
+            )}
+          </div>
+        ) : (
+          updates.map((u) => (
             <UpdateCard key={u.id} update={u} />
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
     </div>
   );
 }
