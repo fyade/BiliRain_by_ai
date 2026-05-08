@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BiliRain - B站博主更新日历
 
-## Getting Started
+追踪你关注的 Bilibili 博主动态，以月视图日历直观展示更新情况。
 
-First, run the development server:
+## 快速开始
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+打开 http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 功能
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **三栏布局**：左侧博主管理 + 中间月视图日历 + 右侧动态列表，完全联动
+- **博主管理**：支持 UID 或主页链接添加，分组管理（增删改），搜索筛选
+- **日历视图**：月视图网格，每天展示有更新的博主头像，点击日期查看详情
+- **动态类型筛选**：视频、图文、专栏、直播等多种类型自由过滤
+- **数据刷新**：支持刷新本月、刷新今日、刷新选中博主、全量强制刷新
+- **本地存储**：所有数据存为 JSON 文件，无需数据库
+- **隐私安全**：B站 Cookie 仅存本地，所有 API 请求通过服务端转发
 
-## Learn More
+## 使用说明
 
-To learn more about Next.js, take a look at the following resources:
+1. 点击左上角齿轮图标 → 粘贴 B站 Cookie → 保存
+2. 点击「+ 添加」→ 输入博主 UID 或空间链接 → 选择分组 → 确认
+3. 日历自动加载动态，有更新的日期出现博主头像
+4. 点击日历格子 → 右侧展示对应日期的动态列表
+5. 点击分组标签筛选博主，三栏同步联动
+6. 右下角「⋯」菜单提供多种刷新选项
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 技术栈
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Next.js 16 + React 19 + TypeScript + Tailwind CSS v4
