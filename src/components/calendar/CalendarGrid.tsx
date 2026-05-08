@@ -6,10 +6,11 @@ import DayCell from './DayCell';
 interface CalendarGridProps {
   weeks: CalendarDay[][];
   selectedDate: string | null;
+  avatarSize: number;
   onSelectDate: (date: string | null) => void;
 }
 
-export default function CalendarGrid({ weeks, selectedDate, onSelectDate }: CalendarGridProps) {
+export default function CalendarGrid({ weeks, selectedDate, avatarSize, onSelectDate }: CalendarGridProps) {
   const handleClick = (date: string) => {
     onSelectDate(selectedDate === date ? null : date);
   };
@@ -23,6 +24,7 @@ export default function CalendarGrid({ weeks, selectedDate, onSelectDate }: Cale
               key={day.fullDate}
               day={day}
               isSelected={selectedDate === day.fullDate}
+              avatarSize={avatarSize}
               onClick={handleClick}
             />
           ))}

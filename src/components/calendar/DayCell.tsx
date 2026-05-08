@@ -6,10 +6,11 @@ import AvatarCluster from './AvatarCluster';
 interface DayCellProps {
   day: CalendarDay;
   isSelected: boolean;
+  avatarSize: number;
   onClick: (date: string) => void;
 }
 
-export default function DayCell({ day, isSelected, onClick }: DayCellProps) {
+export default function DayCell({ day, isSelected, avatarSize, onClick }: DayCellProps) {
   const handleClick = () => {
     if (day.isCurrentMonth) {
       onClick(day.fullDate);
@@ -46,7 +47,7 @@ export default function DayCell({ day, isSelected, onClick }: DayCellProps) {
 
       {/* Avatars */}
       <div className="flex-1 overflow-hidden">
-        <AvatarCluster activities={day.creatorActivities} max={3} />
+        <AvatarCluster activities={day.creatorActivities} size={avatarSize} />
       </div>
 
       {/* Update count text */}

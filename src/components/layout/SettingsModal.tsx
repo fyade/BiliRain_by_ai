@@ -13,17 +13,19 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
   const { config, updateConfig } = useConfig();
   const [cookie, setCookie] = useState('');
   const [interval, setInterval] = useState(30);
+  const [avatarSize, setAvatarSize] = useState(24);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     if (config && open) {
       setCookie(config.cookie || '');
       setInterval(config.refreshIntervalMin || 30);
+      setAvatarSize(config.avatarSize || 24);
     }
   }, [config, open]);
 
   const handleSave = async () => {
-    await updateConfig({ cookie, refreshIntervalMin: interval });
+    await updateConfig({ cookie, refreshIntervalMin: interval, avatarSize });
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -62,6 +64,32 @@ export default function SettingsModal({ open, onClose }: SettingsModalProps) {
             className="w-24 px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-blue-400 focus:ring-1 ring-blue-200"
           />
           <p className="text-xs text-gray-400 mt-1">建议 15-60 分钟，避免请求过于频繁。</p>
+        </div>
+
+        {/* Avatar Size */}
+        <div>
+          <div className="text-[11px] font-medium text-gray-400 uppercase tracking-wide mb-3">
+            个性化设置
+          </div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            日历头像尺寸
+          </label>
+          <div className="flex items-center gap-3">
+            <input
+              type="range"
+              value={avatarSize}
+              onChange={(e) => setAvatarSize(Number(e.target.value))}
+              min={20}
+              max={40}
+              step={2}
+              className="flex-1 h-1.5 bg-gray-200 rounded-full appearance-none cursor-pointer accent-blue-500"
+            />
+            <span className="text-sm text-gray-600 w-10 text-right font-medium">{avatarSize}px</span>
+          </div>
+          <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+            <span>小</span>
+            <span>大</span>
+          </div>
         </div>
 
         {/* Save */}

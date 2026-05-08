@@ -7,11 +7,14 @@ import RefreshMenu from '@/components/calendar/RefreshMenu';
 import { useCalendarContext } from '@/hooks/CalendarContext';
 import { useCreatorContext } from '@/hooks/CreatorContext';
 import { useCalendarData } from '@/hooks/useCalendarData';
+import { useConfig } from '@/hooks/useConfig';
 
 export default function CalendarPanel() {
   const { state: calState, selectDate } = useCalendarContext();
   const { state: creatorState } = useCreatorContext();
   const { weeks, allUids, selectedUids, doRefresh } = useCalendarData();
+  const { config } = useConfig();
+  const avatarSize = config?.avatarSize ?? 24;
 
   const noCreatorsSelected =
     creatorState.selectedCreatorIds.length === 0 && creatorState.creators.length > 0;
@@ -33,6 +36,7 @@ export default function CalendarPanel() {
           <CalendarGrid
             weeks={weeks}
             selectedDate={calState.selectedDate}
+            avatarSize={avatarSize}
             onSelectDate={selectDate}
           />
         )}

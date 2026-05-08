@@ -31,7 +31,7 @@ async function readConfig(): Promise<AppConfig> {
     const raw = await fs.readFile(path.join(DATA_DIR, CONFIG_FILE), 'utf-8');
     return JSON.parse(raw);
   } catch {
-    return { cookie: '', refreshIntervalMin: 30, typeFilters: [] };
+    return { cookie: '', refreshIntervalMin: 30, typeFilters: [], avatarSize: 24 };
   }
 }
 

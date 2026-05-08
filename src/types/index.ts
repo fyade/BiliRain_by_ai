@@ -69,6 +69,7 @@ export interface AppConfig {
   cookie: string;
   refreshIntervalMin: number;
   typeFilters: DynamicType[];
+  avatarSize: number;
 }
 
 // ---- Calendar Types ----

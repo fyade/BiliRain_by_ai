@@ -12,7 +12,7 @@ export function useConfig() {
     api
       .fetchConfig()
       .then(setConfig)
-      .catch(() => setConfig({ cookie: '', refreshIntervalMin: 30, typeFilters: [] }))
+      .catch(() => setConfig({ cookie: '', refreshIntervalMin: 30, typeFilters: [], avatarSize: 24 }))
       .finally(() => setLoading(false));
   }, []);
 
