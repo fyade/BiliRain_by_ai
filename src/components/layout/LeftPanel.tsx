@@ -35,7 +35,6 @@ export default function LeftPanel() {
   return (
     <>
       <div className="w-72 h-full bg-white border-r border-gray-200 flex flex-col flex-shrink-0">
-        {/* Header */}
         <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-gray-100">
           <h1 className="text-base font-bold text-gray-800">BiliRain</h1>
           <div className="flex items-center gap-0.5">
