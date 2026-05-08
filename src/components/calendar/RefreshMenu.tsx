@@ -9,6 +9,13 @@ interface RefreshMenuProps {
   onRefresh: (uids: number[], force: boolean, clearCache: boolean, navigateToday: boolean) => void;
 }
 
+const rows = [
+  { label: '刷新今日',   force: true,  clearCache: false, navigateToday: true },
+  { label: '刷新近3日',  force: true,  clearCache: false, navigateToday: false },
+  { label: '刷新近7日',  force: true,  clearCache: false, navigateToday: false },
+  { label: '刷新本月',   force: false, clearCache: true,  navigateToday: false },
+];
+
 export default function RefreshMenu({
   allUids,
   selectedUids,
@@ -62,90 +69,41 @@ export default function RefreshMenu({
 
       {/* Dropdown menu */}
       {open && (
-        <div className="absolute bottom-full right-0 mb-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
-          <div className="px-3 py-2 text-[10px] text-gray-400 uppercase tracking-wide">刷新选项</div>
+        <div className="absolute bottom-full right-0 mb-2 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+          <div className="px-4 py-2.5 text-[11px] font-medium text-gray-500 border-b border-gray-100">
+            刷新选项
+          </div>
 
-          {/* 全量强制刷新 */}
+          {rows.map((row) => (
+            <div
+              key={row.label}
+              className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 transition-colors"
+            >
+              <span className="text-sm text-gray-700 w-[72px] shrink-0">{row.label}</span>
+              <button
+                onClick={() => handleClick(allUids, row.force, row.clearCache, row.navigateToday)}
+                className="px-2.5 py-1 text-xs rounded-md bg-gray-100 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+              >
+                全部博主
+              </button>
+              <button
+                disabled={!hasSelected}
+                onClick={() => handleClick(selectedUids, row.force, row.clearCache, row.navigateToday)}
+                className="px-2.5 py-1 text-xs rounded-md bg-gray-100 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                选定博主
+              </button>
+            </div>
+          ))}
+
+          <div className="border-t border-gray-100" />
+
           <button
             onClick={() => handleClick(allUids, true, false, false)}
-            className="w-full text-left px-4 py-2 text-sm text-orange-600 hover:bg-orange-50 transition-colors flex items-center gap-2"
+            className="w-full text-left px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-50 transition-colors"
           >
-            <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
             全量强制刷新
-          </button>
-
-          <div className="border-t border-gray-100" />
-
-          {/* 刷新今日 */}
-          <div className="px-3 py-1.5 text-[10px] text-gray-400 uppercase tracking-wide">刷新今日</div>
-          <button
-            onClick={() => handleClick(allUids, true, false, true)}
-            className="w-full text-left px-6 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            全部博主
-          </button>
-          <button
-            disabled={!hasSelected}
-            onClick={() => handleClick(selectedUids, true, false, true)}
-            className="w-full text-left px-6 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          >
-            选定博主
-          </button>
-
-          <div className="border-t border-gray-100" />
-
-          {/* 刷新近3日 */}
-          <div className="px-3 py-1.5 text-[10px] text-gray-400 uppercase tracking-wide">刷新近3日</div>
-          <button
-            onClick={() => handleClick(allUids, true, false, false)}
-            className="w-full text-left px-6 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            全部博主
-          </button>
-          <button
-            disabled={!hasSelected}
-            onClick={() => handleClick(selectedUids, true, false, false)}
-            className="w-full text-left px-6 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          >
-            选定博主
-          </button>
-
-          <div className="border-t border-gray-100" />
-
-          {/* 刷新近7日 */}
-          <div className="px-3 py-1.5 text-[10px] text-gray-400 uppercase tracking-wide">刷新近7日</div>
-          <button
-            onClick={() => handleClick(allUids, true, false, false)}
-            className="w-full text-left px-6 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            全部博主
-          </button>
-          <button
-            disabled={!hasSelected}
-            onClick={() => handleClick(selectedUids, true, false, false)}
-            className="w-full text-left px-6 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          >
-            选定博主
-          </button>
-
-          <div className="border-t border-gray-100" />
-
-          {/* 刷新本月 */}
-          <div className="px-3 py-1.5 text-[10px] text-gray-400 uppercase tracking-wide">刷新本月</div>
-          <button
-            onClick={() => handleClick(allUids, false, true, false)}
-            className="w-full text-left px-6 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            全部博主
-          </button>
-          <button
-            disabled={!hasSelected}
-            onClick={() => handleClick(selectedUids, false, true, false)}
-            className="w-full text-left px-6 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          >
-            选定博主
+            <span className="text-orange-400 ml-1 text-xs">（全部历史数据，忽略缓存）</span>
           </button>
         </div>
       )}
