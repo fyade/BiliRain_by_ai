@@ -33,3 +33,7 @@ npm run dev
 ## 技术栈
 
 Next.js 16 + React 19 + TypeScript + Tailwind CSS v4
+
+---
+
+English version: [README_EN.md](README_EN.md)

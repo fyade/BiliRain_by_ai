@@ -40,6 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# local data (cookie contains private info)
-data/config.json
-data/updates/
+# local data (personal data, cookies, etc.)
+data/
