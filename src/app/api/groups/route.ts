@@ -7,11 +7,16 @@ const DATA_DIR = path.join(process.cwd(), 'data');
 const CREATORS_FILE = 'creators.json';
 
 async function readCreators(): Promise<CreatorsData> {
-  const raw = await fs.readFile(path.join(DATA_DIR, CREATORS_FILE), 'utf-8');
-  return JSON.parse(raw);
+  try {
+    const raw = await fs.readFile(path.join(DATA_DIR, CREATORS_FILE), 'utf-8');
+    return JSON.parse(raw);
+  } catch {
+    return { creators: [], groups: ['默认'] };
+  }
 }
 
 async function writeCreators(data: CreatorsData): Promise<void> {
+  await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(
     path.join(DATA_DIR, CREATORS_FILE),
     JSON.stringify(data, null, 2),

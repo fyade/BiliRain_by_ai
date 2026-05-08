@@ -16,6 +16,7 @@ async function readConfig(): Promise<AppConfig> {
 }
 
 async function writeConfig(config: AppConfig): Promise<void> {
+  await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(
     path.join(DATA_DIR, CONFIG_FILE),
     JSON.stringify(config, null, 2),

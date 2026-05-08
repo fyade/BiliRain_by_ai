@@ -18,6 +18,7 @@ async function readCreators(): Promise<CreatorsData> {
 }
 
 async function writeCreators(data: CreatorsData): Promise<void> {
+  await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(
     path.join(DATA_DIR, CREATORS_FILE),
     JSON.stringify(data, null, 2),
