@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import GroupManager from '@/components/creators/GroupManager';
 import CreatorList from '@/components/creators/CreatorList';
 import SettingsModal from '@/components/layout/SettingsModal';
+import ScriptModal from '@/components/layout/ScriptModal';
 import AddCreatorModal from '@/components/creators/AddCreatorModal';
 import GroupManageModal from '@/components/creators/GroupManageModal';
 import { useCreatorContext } from '@/hooks/CreatorContext';
@@ -12,6 +13,7 @@ export default function LeftPanel() {
   const { state, selectAll } = useCreatorContext();
   const [activeGroup, setActiveGroup] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [scriptOpen, setScriptOpen] = useState(false);
   const [addCreatorOpen, setAddCreatorOpen] = useState(false);
   const [groupManageOpen, setGroupManageOpen] = useState(false);
 
@@ -36,6 +38,15 @@ export default function LeftPanel() {
         {/* Header */}
         <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-gray-100">
           <h1 className="text-base font-bold text-gray-800">BiliRain</h1>
+          <button
+            onClick={() => setScriptOpen(true)}
+            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            title="快捷脚本"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </button>
           <button
             onClick={() => setSettingsOpen(true)}
             className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
@@ -67,6 +78,7 @@ export default function LeftPanel() {
       </div>
 
       <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <ScriptModal open={scriptOpen} onClose={() => setScriptOpen(false)} />
       <AddCreatorModal open={addCreatorOpen} onClose={() => setAddCreatorOpen(false)} />
       <GroupManageModal open={groupManageOpen} onClose={() => setGroupManageOpen(false)} />
     </>
