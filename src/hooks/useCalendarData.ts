@@ -56,48 +56,28 @@ export function useCalendarData() {
     fetchingRef.current = false;
   }, [monthKey]);
 
-  // ---- Refresh functions ----
+  // ---- Unified refresh handler ----
 
-  // 刷新本月 - refresh current month (use cache if fresh)
-  const refreshMonth = useCallback(() => {
-    fetchingRef.current = false;
-    dispatch({ type: 'SET_REFRESHING', refreshing: true });
-    // clear current month cache so it refetches
-    dispatch({ type: 'SET_MONTH_DATA', key: monthKey, data: {} });
-    const allUids = creatorState.creators.map((c) => c.uid);
-    doFetch(allUids, false);
-  }, [monthKey, creatorState.creators, doFetch, dispatch]);
+  const allUids = creatorState.creators.map((c) => c.uid);
 
-  // 全量刷新 - bypass all caches, force refetch all creators
-  const refreshAllForce = useCallback(() => {
-    fetchingRef.current = false;
-    dispatch({ type: 'SET_REFRESHING', refreshing: true });
-    const allUids = creatorState.creators.map((c) => c.uid);
-    doFetch(allUids, true);
-  }, [creatorState.creators, doFetch, dispatch]);
-
-  // 刷新选中 - refetch only selected creators with cache bypass
-  const refreshSelected = useCallback(() => {
-    fetchingRef.current = false;
-    dispatch({ type: 'SET_REFRESHING', refreshing: true });
-    const selectedUids = creatorState.selectedCreatorIds;
-    if (selectedUids.length === 0) {
-      dispatch({ type: 'SET_REFRESHING', refreshing: false });
-      return;
-    }
-    doFetch(selectedUids, true);
-  }, [creatorState.selectedCreatorIds, doFetch, dispatch]);
-
-  // 刷新今日 - refetch all creators with cache bypass (to get latest today's updates)
-  const refreshToday = useCallback(() => {
-    fetchingRef.current = false;
-    dispatch({ type: 'SET_REFRESHING', refreshing: true });
-    const allUids = creatorState.creators.map((c) => c.uid);
-    doFetch(allUids, true);
-    // also navigate to today
-    const today = getTodayKey();
-    dispatch({ type: 'SELECT_DATE', date: today });
-  }, [creatorState.creators, doFetch, dispatch]);
+  const doRefresh = useCallback(
+    (uids: number[], force: boolean, clearCache: boolean, navigateToday: boolean) => {
+      if (uids.length === 0) {
+        dispatch({ type: 'SET_REFRESHING', refreshing: false });
+        return;
+      }
+      fetchingRef.current = false;
+      dispatch({ type: 'SET_REFRESHING', refreshing: true });
+      if (clearCache) {
+        dispatch({ type: 'SET_MONTH_DATA', key: monthKey, data: {} });
+      }
+      if (navigateToday) {
+        dispatch({ type: 'SELECT_DATE', date: getTodayKey() });
+      }
+      doFetch(uids, force);
+    },
+    [monthKey, doFetch, dispatch]
+  );
 
   // Build calendar grid
   const rawWeeks = getMonthGrid(calState.currentYear, calState.currentMonth);
@@ -123,10 +103,8 @@ export function useCalendarData() {
   return {
     weeks,
     monthData,
-    selectedUids,
-    refreshMonth,
-    refreshAllForce,
-    refreshSelected,
-    refreshToday,
+    allUids,
+    selectedUids: creatorState.selectedCreatorIds,
+    doRefresh,
   };
 }

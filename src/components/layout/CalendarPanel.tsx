@@ -11,8 +11,7 @@ import { useCalendarData } from '@/hooks/useCalendarData';
 export default function CalendarPanel() {
   const { state: calState, selectDate } = useCalendarContext();
   const { state: creatorState } = useCreatorContext();
-  const { weeks, refreshMonth, refreshAllForce, refreshSelected, refreshToday } =
-    useCalendarData();
+  const { weeks, allUids, selectedUids, doRefresh } = useCalendarData();
 
   const noCreatorsSelected =
     creatorState.selectedCreatorIds.length === 0 && creatorState.creators.length > 0;
@@ -45,10 +44,9 @@ export default function CalendarPanel() {
         )}
 
         <RefreshMenu
-          onRefreshMonth={refreshMonth}
-          onRefreshAll={refreshAllForce}
-          onRefreshSelected={refreshSelected}
-          onRefreshToday={refreshToday}
+          allUids={allUids}
+          selectedUids={selectedUids}
+          onRefresh={doRefresh}
         />
       </div>
     </div>
