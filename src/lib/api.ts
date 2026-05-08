@@ -1,4 +1,4 @@
-import { Creator, CreatorsData, AppConfig, BatchUpdateResponse } from '@/types';
+import { Creator, CreatorsData, AppConfig, BatchUpdateResponse, BatchAddResponse } from '@/types';
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(url, options);
@@ -34,6 +34,17 @@ export async function addCreator(identifier: string, groups?: string[]): Promise
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ identifier, groups }),
+  });
+}
+
+export async function addCreatorBatch(
+  identifiers: string[],
+  groups?: string[]
+): Promise<BatchAddResponse> {
+  return request<BatchAddResponse>('/api/creators/batch', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ identifiers, groups }),
   });
 }
 

@@ -9,7 +9,7 @@ import {
   useRef,
   ReactNode,
 } from 'react';
-import { Creator, DynamicType } from '@/types';
+import { Creator, DynamicType, BatchAddResponse } from '@/types';
 import * as api from '@/lib/api';
 
 // ---- State ----
@@ -132,6 +132,7 @@ interface CreatorContextValue {
   state: CreatorState;
   loadCreators: () => Promise<void>;
   addCreator: (identifier: string, groups?: string[]) => Promise<Creator | null>;
+  addCreatorBatch: (identifiers: string[], groups?: string[]) => Promise<BatchAddResponse>;
   updateCreator: (uid: number, groups: string[]) => Promise<void>;
   deleteCreator: (uid: number) => Promise<void>;
   toggleCreator: (uid: number) => void;
@@ -174,6 +175,25 @@ export function CreatorProvider({ children }: { children: ReactNode }) {
       const msg = err instanceof Error ? err.message : '添加失败';
       throw new Error(msg);
     }
+  }, []);
+
+  const addCreatorBatch = useCallback(async (identifiers: string[], groups?: string[]) => {
+    const result = await api.addCreatorBatch(identifiers, groups);
+    for (const r of result.results) {
+      if (r.status === 'added' && r.uid && r.name && r.avatar) {
+        dispatch({
+          type: 'ADD_CREATOR',
+          creator: {
+            uid: r.uid,
+            name: r.name,
+            avatar: r.avatar,
+            groups: groups?.length ? groups : ['默认'],
+            addedAt: new Date().toISOString(),
+          },
+        });
+      }
+    }
+    return result;
   }, []);
 
   const updateCreator = useCallback(async (uid: number, groups: string[]) => {
@@ -220,6 +240,7 @@ export function CreatorProvider({ children }: { children: ReactNode }) {
         state,
         loadCreators,
         addCreator,
+        addCreatorBatch,
         updateCreator,
         deleteCreator,
         toggleCreator,

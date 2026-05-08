@@ -1,3 +1,24 @@
+// ---- Batch Add Types ----
+
+export interface BatchAddResult {
+  identifier: string;
+  uid?: number;
+  name?: string;
+  avatar?: string;
+  status: 'added' | 'skipped' | 'failed';
+  reason?: string;
+}
+
+export interface BatchAddResponse {
+  results: BatchAddResult[];
+  summary: {
+    total: number;
+    added: number;
+    skipped: number;
+    failed: number;
+  };
+}
+
 // ---- Core Domain Types ----
 
 export interface Creator {
